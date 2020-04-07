@@ -12,12 +12,13 @@ app.use(bodyParser.json());
 
 const uri = process.env.DB_PATH;
 
-let client = new MongoClient(uri, { useNewUrlParser: true });
+let client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 const users = ["Asad", 'Moin', 'Sabed', 'Susmita', 'Sohana', 'Sabana'];
 
 
 app.get('/products', (req, res) =>{
-    client = new MongoClient(uri, { useNewUrlParser: true });
+    let client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+    
     client.connect(err => {
         const collection = client.db("onlineStore").collection("products");
         collection.find({name:'mobile'}).limit(10).toArray((err, documents)=>{
@@ -29,7 +30,7 @@ app.get('/products', (req, res) =>{
                 res.send(documents);
             }
         });
-        client.close();
+        //client.close();
       });
 });
 
@@ -44,7 +45,7 @@ app.get('/product/:id', (req, res) =>{
 // post
 app.post('/addProduct', (req, res) => {
     const product = req.body;
-    client = new MongoClient(uri, { useNewUrlParser: true });
+    let client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
     client.connect(err => {
         const collection = client.db("onlineStore").collection("products");
         collection.insertOne(product, (err, result)=>{
@@ -56,7 +57,7 @@ app.post('/addProduct', (req, res) => {
                 res.send(result.ops[0]);
             }
         });
-        client.close();
+        //client.close();
       });
 });
 
